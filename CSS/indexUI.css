@@ -34,6 +34,11 @@
       font-size: 36px;
   }
 
+  h1, h2 {
+      font-family: "Segoe UI Variable Display", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+     font-weight: 500;
+  }
+
   a,
   a:visited {
       color: #777;

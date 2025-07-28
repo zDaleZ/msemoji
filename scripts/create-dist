@@ -4,7 +4,7 @@
     https://github.com/twitter/twemoji/blob/gh-pages/LICENSE
 */
 
-/*! msemoji is modified from twemoji by DaleZ(DellZHackintosh). Licensed inherits Twemoji. */
+/*! msemoji is modified from twemoji by DaleZ(zDaleZ). Licensed inherits Twemoji. */
 
 const fs = require('fs-extra');
 const path = require('path');
@@ -19,45 +19,60 @@ function distFile(...which) {
   return path.join(__dirname, '..', 'dist', ...which);
 }
 
-fs.writeFileSync(
-  distFile('msemoji.npm.js'),
-  [
-    'var location = global.location || {};',
-    fs.readFileSync(distFile('msemoji.js')),
-    'if (!location.protocol) {',
-    '  msemoji.base = msemoji.base.replace(/^http:/, "");',
-    '}',
-    'module.exports = msemoji;'
-  ].join('\n')
-);
+const copyright = '/* Copyright Twitter Inc. and other contributors. Licensed under MIT */';
+const addition = '/* msemoji is modified from twemoji by DaleZ(zDaleZ). Licensed inherits Twemoji. */';
+const Contents = fs.readFileSync(distFile('msemoji.js'));
 
-fs.writeFileSync(
-  distFile('msemoji.amd.js'),
-  'define(function () {\n' +
-    fs.readFileSync(distFile('msemoji.js')).toString().replace(
-      /^(.)/gm, '  $1'
-    ) +
-  '\n  return msemoji;\n});'
+fs.writeFileSync(distFile('msemoji.esm.js'), `${copyright}\n${addition}\n${Contents}\nexport default msemoji;`);
+
+spawnSync(
+  'yarn',
+  [
+    'rollup',
+    '-i',
+    distFile('msemoji.esm.js'),
+    '--format',
+    'umd',
+    '--name',
+    'msemoji',
+    '-o',
+    distFile('msemoji.umd.js')
+  ],
+  {
+    shell: process.platform === 'win32',
+    stdio: 'inherit'
+  }
 );
 
 spawnSync(
   'yarn',
   [
-    'uglifyjs',
+    'terser',
+    distFile('msemoji.umd.js'),
+    '--compress',
     '--verbose',
-    distFile('msemoji.js'),
     '-o',
-    distFile('msemoji.tmp.js')
+    distFile('msemoji.umd.min.js')
   ],
   {
-    shell: process.platform === 'win32'
+    shell: process.platform === 'win32',
+    stdio: 'inherit'
   }
 );
 
-const copyright = '/*! Copyright Twitter Inc. and other contributors. Licensed under MIT */';
-const addition = '/*! msemoji is modified from twemoji by DaleZ(DellZHackintosh). Licensed inherits Twemoji. */';
-const minifiedContents = fs.readFileSync(distFile('msemoji.tmp.js'));
-fs.unlinkSync(distFile('msemoji.tmp.js'));
-
-fs.writeFileSync(distFile('msemoji.min.js'), `${copyright}\n${addition}\n${minifiedContents}`);
-fs.writeFileSync(distFile('msemoji.esm.js'), `${copyright}\n${addition}\n${minifiedContents}\nexport default msemoji;`);
+spawnSync(
+  'yarn',
+  [
+    'terser',
+    distFile('msemoji.esm.js'),
+    '--compress',
+    '--verbose',
+    '--module',
+    '-o',
+    distFile('msemoji.esm.min.js')
+  ],
+  {
+    shell: process.platform === 'win32',
+    stdio: 'inherit'
+  }
+);

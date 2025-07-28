@@ -4,15 +4,15 @@
      https://github.com/twitter/twemoji/blob/gh-pages/LICENSE
  */
 
- /*! msemoji is modified from twemoji by DaleZ(DellZHackintosh). Licensed inherits twemoji. */
+ /*! msemoji is modified from twemoji by DaleZ(zDaleZ). Licensed inherits twemoji. */
 
 // dependencies
 var fs = require('fs');
 var http = require('http');
 var path = require('path');
 var Utils = require('./utils');
-var regex = require('./regex').default;
 var { version } = require('../package.json');
+const { waitForDebugger } = require('inspector');
 
 function file(which) {
   return path.join(__dirname, '..', which);
@@ -29,7 +29,7 @@ function createmsemoji() {
         https://github.com/twitter/twemoji/blob/gh-pages/LICENSE
       */
 
-      /*! msemoji is modified from twemoji by DaleZ(DellZHackintosh). Licensed inherits twemoji. */
+      /*! msemoji is modified from twemoji by DaleZ(zDaleZ). Licensed inherits twemoji. */
 
       // WARNING:   this file is generated automatically via
       //            `node scripts/build.js`
@@ -51,7 +51,7 @@ function createmsemoji() {
         /////////////////////////
 
           // default assets url
-          base: 'https://raw.githubusercontent.com/DellZHackintosh/msemoji/main/src/',
+          base: 'https://raw.githubusercontent.com/zDaleZ/msemoji/main/src/',
 
           // default assets file extensions, by default '.png'
           ext: '.png',
@@ -616,6 +616,11 @@ function createmsemoji() {
       ) + '());');
 
 }
+
+debugger;
+
+require('./create-regexp');
+const regex = require('./regex').default;
 
 createmsemoji();
 require('./create-dist');

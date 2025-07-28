@@ -1,3 +1,4 @@
+var location = global.location || {};
 /*jslint indent: 2, browser: true, bitwise: true, plusplus: true */
 var msemoji = (function (
   /*! Copyright Twitter Inc. and other contributors. Licensed under MIT *//*
@@ -576,3 +577,7 @@ var msemoji = (function (
   }
 
 }());
+if (!location.protocol) {
+  msemoji.base = msemoji.base.replace(/^http:/, "");
+}
+module.exports = msemoji;
